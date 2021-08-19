@@ -6,13 +6,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/spinel/go-musthave-shortener-tpl/internal/app/helper"
-	"github.com/spinel/go-musthave-shortener-tpl/internal/app/storage"
+	"github.com/spinel/go-musthave-shortener-tpl/internal/app/model"
+	"github.com/spinel/go-musthave-shortener-tpl/internal/app/repository"
 )
 
 const Host = "http://localhost:8080"
 
-func Create(s storage.Storage) func(w http.ResponseWriter, r *http.Request) {
+func CreateUserHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -24,18 +24,21 @@ func Create(s storage.Storage) func(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "no body", http.StatusBadRequest)
 			return
 		}
-		generatedString, err := helper.NewStringGenerator()
+		user := &model.User{
+			URL: url,
+		}
+		code, err := repo.User.SaveUser(user)
 		if err != nil {
-			http.Error(w, "generate code error", http.StatusBadRequest)
+			http.Error(w, "save user error", http.StatusInternalServerError)
 			return
 		}
-		s[generatedString.Value] = url
-		result := fmt.Sprintf("%s/%s", Host, generatedString.Value)
+		result := fmt.Sprintf("%s/%s", Host, code)
+		w.WriteHeader(201)
 		w.Write([]byte(result))
 	}
 }
 
-func Get(s storage.Storage) func(w http.ResponseWriter, r *http.Request) {
+func GetUserHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, ok := vars["id"]
@@ -43,10 +46,12 @@ func Get(s storage.Storage) func(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "no id", http.StatusBadRequest)
 			return
 		}
-		if val, ok := s[id]; ok {
-			http.Redirect(w, r, val, http.StatusTemporaryRedirect)
+		fmt.Println(id)
+		url, err := repo.User.GetUserBy(id)
+		if err != nil {
+			http.Error(w, "save user error", http.StatusInternalServerError)
 			return
 		}
-		http.Error(w, "not exists", http.StatusBadRequest)
+		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 	}
 }
