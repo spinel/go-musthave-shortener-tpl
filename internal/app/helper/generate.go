@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const defaultCodeLength = 8
+
 type GeneratedString string
 
 // NewStringGenerator creates a new StringGenerator.

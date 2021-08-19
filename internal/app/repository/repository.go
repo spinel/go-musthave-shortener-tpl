@@ -17,5 +17,4 @@ type RepositoryMock struct {
 func (m *RepositoryMock) GetUserBy(id string) (string, error) {
 	args := m.Called(id)
 	return args.String(0), args.Error(1)
-
 }
