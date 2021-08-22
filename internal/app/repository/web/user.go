@@ -1,7 +1,6 @@
 package web
 
 import (
-	"github.com/spinel/go-musthave-shortener-tpl/internal/app/helper"
 	"github.com/spinel/go-musthave-shortener-tpl/internal/app/model"
 )
 
@@ -11,23 +10,23 @@ type UserRepo struct {
 }
 
 // NewUserRepo ...
-func NewUserRepo() *UserRepo {
+func NewUserRepo(db map[string]*model.User) *UserRepo {
 	var repo UserRepo
-	repo.Memory = make(map[string]*model.User)
+	repo.Memory = db
 	return &repo
 }
 
-func (repo *UserRepo) GetUserBy(id string) (string, error) {
+func (repo *UserRepo) GetUserBy(id string) (*model.User, error) {
 	user := repo.Memory[id]
-	return user.URL, nil
+	return user, nil
 }
 
-func (repo *UserRepo) SaveUser(user *model.User) (string, error) {
-	code, err := helper.NewGeneratedString()
-	if err != nil {
-		return "", err
-	}
-	codeString := string(code)
-	repo.Memory[codeString] = user
-	return codeString, nil
+func (repo *UserRepo) SaveUser(code string, user *model.User) error {
+	repo.Memory[code] = user
+	return nil
+}
+
+func (repo *UserRepo) IncludesCode(code string) bool {
+	_, result := repo.Memory[code]
+	return result
 }
