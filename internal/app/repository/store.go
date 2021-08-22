@@ -6,14 +6,14 @@ import (
 )
 
 type Store struct {
-	MemoryDB map[string]*model.User
-	User     Repository
+	MemoryDB  map[string]*model.Shortener
+	Shortener Repository
 }
 
 func New() (*Store, error) {
-	db := make(map[string]*model.User)
+	db := make(map[string]*model.Shortener)
 	var store Store
 	store.MemoryDB = db
-	store.User = web.NewUserRepo(db)
+	store.Shortener = web.NewShortenerRepo(db)
 	return &store, nil
 }

@@ -8,7 +8,7 @@ import (
 
 func Router(repo *repository.Store) *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/", handler.CreateUserHandler(repo))
-	r.HandleFunc("/{id:[0-9a-z]+}", handler.GetUserHandler(repo))
+	r.HandleFunc("/", handler.CreateShortenerHandler(repo))
+	r.HandleFunc("/{id:[0-9a-z]+}", handler.GetShortenerHandler(repo))
 	return r
 }

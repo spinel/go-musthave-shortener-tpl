@@ -12,7 +12,7 @@ import (
 
 const Host = "http://localhost:8080"
 
-func CreateUserHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
+func CreateShortenerHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
@@ -24,24 +24,24 @@ func CreateUserHandler(repo *repository.Store) func(w http.ResponseWriter, r *ht
 			http.Error(w, "no body", http.StatusBadRequest)
 			return
 		}
-		user := &model.User{
+		shortener := &model.Shortener{
 			URL: url,
 		}
 		var code helper.GeneratedString
 		for {
 			code, err = helper.NewGeneratedString()
 			if err != nil {
-				http.Error(w, "save user error", http.StatusInternalServerError)
+				http.Error(w, "save shortener error", http.StatusInternalServerError)
 				return
 			}
-			if !repo.User.IncludesCode(string(code)) {
+			if !repo.Shortener.IncludesCode(string(code)) {
 				break
 			}
 		}
 		codeString := string(code)
-		err = repo.User.SaveUser(codeString, user)
+		err = repo.Shortener.SaveShortener(codeString, shortener)
 		if err != nil {
-			http.Error(w, "user exists", http.StatusInternalServerError)
+			http.Error(w, "shortener exists", http.StatusInternalServerError)
 			return
 		}
 		result := fmt.Sprintf("%s/%s", Host, code)
@@ -51,7 +51,7 @@ func CreateUserHandler(repo *repository.Store) func(w http.ResponseWriter, r *ht
 	}
 }
 
-func GetUserHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
+func GetShortenerHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		url := r.URL.String()
 		id := url[1:]
@@ -59,15 +59,15 @@ func GetUserHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.
 			http.Error(w, "no id", http.StatusBadRequest)
 			return
 		}
-		user, err := repo.User.GetUserBy(id)
+		shortener, err := repo.Shortener.GetShortenerBy(id)
 		if err != nil {
-			http.Error(w, "get user error", http.StatusInternalServerError)
+			http.Error(w, "get shortener error", http.StatusInternalServerError)
 			return
 		}
-		if user == nil {
+		if shortener == nil {
 			http.Error(w, "not found", http.StatusNotFound)
 			return
 		}
-		http.Redirect(w, r, user.URL, http.StatusTemporaryRedirect)
+		http.Redirect(w, r, shortener.URL, http.StatusTemporaryRedirect)
 	}
 }

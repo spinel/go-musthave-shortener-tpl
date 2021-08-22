@@ -1,5 +1,5 @@
 package model
 
-type User struct {
+type Shortener struct {
 	URL string
 }

@@ -5,7 +5,7 @@ import (
 )
 
 type Repository interface {
-	GetUserBy(string) (*model.User, error)
-	SaveUser(string, *model.User) error
+	GetShortenerBy(string) (*model.Shortener, error)
+	SaveShortener(string, *model.Shortener) error
 	IncludesCode(string) bool
 }

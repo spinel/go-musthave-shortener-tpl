@@ -13,7 +13,7 @@ import (
 
 const testUrl = "https://yandex.ru/"
 
-func TestCreateUserHandler(t *testing.T) {
+func TestCreateShortenerHandler(t *testing.T) {
 	type want struct {
 		code        int
 		contentType string
@@ -49,7 +49,7 @@ func TestCreateUserHandler(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			request := httptest.NewRequest("POST", "/", strings.NewReader(tt.payload))
 			w := httptest.NewRecorder()
-			h := http.HandlerFunc(CreateUserHandler(repo))
+			h := http.HandlerFunc(CreateShortenerHandler(repo))
 			h.ServeHTTP(w, request)
 			res := w.Result()
 			//status code
@@ -65,7 +65,7 @@ func TestCreateUserHandler(t *testing.T) {
 	}
 }
 
-func TestGetUserHandler(t *testing.T) {
+func TestGetShortenerHandler(t *testing.T) {
 	const testCode = "testtest"
 	type want struct {
 		code        int
@@ -97,7 +97,7 @@ func TestGetUserHandler(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = repo.User.SaveUser(testCode, &model.User{URL: testUrl})
+	err = repo.Shortener.SaveShortener(testCode, &model.Shortener{URL: testUrl})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -105,7 +105,7 @@ func TestGetUserHandler(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			request := httptest.NewRequest("GET", fmt.Sprintf("/%s", tt.path), nil)
 			w := httptest.NewRecorder()
-			h := http.HandlerFunc(GetUserHandler(repo))
+			h := http.HandlerFunc(GetShortenerHandler(repo))
 			h.ServeHTTP(w, request)
 			res := w.Result()
 			//status code

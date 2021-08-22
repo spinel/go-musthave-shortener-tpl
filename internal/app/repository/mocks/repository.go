@@ -9,13 +9,13 @@ type RepositoryMock struct {
 	mock.Mock
 }
 
-func (m *RepositoryMock) SaveUser(code string, user *model.User) error {
+func (m *RepositoryMock) SaveShortener(code string, shortener *model.Shortener) error {
 	return nil
 }
 
-func (m *RepositoryMock) GetUserBy(id string) (*model.User, error) {
-	user := &model.User{
+func (m *RepositoryMock) GetShortenerBy(id string) (*model.Shortener, error) {
+	shortener := &model.Shortener{
 		URL: "https://yandex.ru/",
 	}
-	return user, nil
+	return shortener, nil
 }
