@@ -53,8 +53,7 @@ func CreateShortenerHandler(repo *repository.Store) func(w http.ResponseWriter, 
 
 func GetShortenerHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		url := r.URL.String()
-		id := url[1:]
+		id := r.URL.Path[1:]
 		if id == "" {
 			http.Error(w, "no id", http.StatusBadRequest)
 			return
