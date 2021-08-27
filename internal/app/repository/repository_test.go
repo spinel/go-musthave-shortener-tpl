@@ -8,13 +8,14 @@ import (
 	"github.com/spinel/go-musthave-shortener-tpl/internal/app/repository/mocks"
 )
 
-func TestGetShortenerBy(t *testing.T) {
+// TestGetEntityBy 
+func TestGetEntityBy(t *testing.T) {
 	repoMock := new(mocks.RepositoryMock)
 
-	repoMock.On("SaveShortener", "testtest", &model.Shortener{URL: "new"}).Return(nil)
+	repoMock.On("SaveEntity", "testtest", &model.Entity{URL: "new"}).Return(nil)
 	repoMock.AssertExpectations(t)
-	repoMock.On("SaveShortener", "", &model.Shortener{URL: "new"}).Return(nil)
+	repoMock.On("SaveEntity", "", &model.Entity{URL: "new"}).Return(nil)
 
-	repoMock.On("GetShortenerBy", "testtest").Return("name")
-	repoMock.On("GetShortenerBy", "").Return("", errors.New("not found"))
+	repoMock.On("GetEntityBy", "testtest").Return("name")
+	repoMock.On("GetEntityBy", "").Return("", errors.New("not found"))
 }

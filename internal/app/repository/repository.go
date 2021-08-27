@@ -1,11 +1,9 @@
 package repository
 
-import (
-	"github.com/spinel/go-musthave-shortener-tpl/internal/app/model"
-)
+import "github.com/spinel/go-musthave-shortener-tpl/internal/app/model"
 
 type Repository interface {
-	GetShortenerBy(string) (*model.Shortener, error)
-	SaveShortener(string, *model.Shortener) error
-	IncludesCode(string) bool
+	GetEntityBy(id string) (model.Entity, error)
+	SaveEntity(id string, entity model.Entity) error
+	IncludesCode(id string) bool
 }

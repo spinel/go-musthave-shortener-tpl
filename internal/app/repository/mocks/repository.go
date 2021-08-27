@@ -5,17 +5,20 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+// RepositoryMock is a struct for mock tests
 type RepositoryMock struct {
 	mock.Mock
 }
 
-func (m *RepositoryMock) SaveShortener(code string, shortener *model.Shortener) error {
+// SaveEntity is a fake method for save entity.
+func (m *RepositoryMock) SaveEntity(code string, entity model.Entity) error {
 	return nil
 }
 
-func (m *RepositoryMock) GetShortenerBy(id string) (*model.Shortener, error) {
-	shortener := &model.Shortener{
+// GetEntityBy is a fake get method to get entity by id.
+func (m *RepositoryMock) GetEntityBy(id string) (model.Entity, error) {
+	entity := model.Entity{
 		URL: "https://yandex.ru/",
 	}
-	return shortener, nil
+	return entity, nil
 }

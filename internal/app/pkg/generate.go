@@ -1,4 +1,4 @@
-package helper
+package pkg
 
 import (
 	"errors"
@@ -9,26 +9,26 @@ import (
 
 const defaultCodeLength = 8
 
-type GeneratedString string
+var chars = []rune(
+	"abcdefghijkmnpqrstuvwxyz" +
+		"123456789",
+)
 
 // NewStringGenerator creates a new StringGenerator.
-func NewGeneratedString() (GeneratedString, error) {
+func NewGeneratedString() (string, error) {
 	value, err := generateRandomString(defaultCodeLength)
 	if err != nil {
 		return "", err
 	}
-	return GeneratedString(value), nil
+	return value, nil
 }
 
 func generateRandomString(length int) (string, error) {
 	if length < 1 {
 		return "", errors.New("invalid code length provided")
 	}
+
 	rand.Seed(time.Now().UnixNano())
-	chars := []rune(
-		"abcdefghijkmnpqrstuvwxyz" +
-			"123456789",
-	)
 	var b strings.Builder
 	for i := 0; i < length; i++ {
 		b.WriteRune(chars[rand.Intn(len(chars))])
