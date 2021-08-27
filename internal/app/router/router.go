@@ -9,7 +9,8 @@ import (
 // Router for an app.
 func Router(repo *repository.Store) *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/", handler.CreateEntityHandler(repo))
-	r.HandleFunc("/{id:[0-9a-z]+}", handler.GetEntityHandler(repo))
+	r.HandleFunc("/", handler.NewCreateEntityHandler(repo))
+	r.HandleFunc("/{id:[0-9a-z]+}", handler.NewGetEntityHandler(repo))
+
 	return r
 }

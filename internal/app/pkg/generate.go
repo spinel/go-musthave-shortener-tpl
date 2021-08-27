@@ -18,6 +18,7 @@ var chars = []rune(
 func NewGeneratedString() (string, error) {
 	value, err := generateRandomString(defaultCodeLength)
 	if err != nil {
+
 		return "", err
 	}
 	return value, nil
@@ -25,6 +26,7 @@ func NewGeneratedString() (string, error) {
 
 func generateRandomString(length int) (string, error) {
 	if length < 1 {
+
 		return "", errors.New("invalid code length provided")
 	}
 
@@ -33,5 +35,6 @@ func generateRandomString(length int) (string, error) {
 	for i := 0; i < length; i++ {
 		b.WriteRune(chars[rand.Intn(len(chars))])
 	}
+	
 	return b.String(), nil
 }

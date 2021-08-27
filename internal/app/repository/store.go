@@ -7,16 +7,17 @@ import (
 
 // Store main struct.
 type Store struct {
-	MemoryDB map[string]model.Entity
-	Entity   Repository
+	memoryDB map[string]model.Entity
+	Entity   Repositorer
 }
 
 // New store builder.
 func New() (*Store, error) {
 	db := make(map[string]model.Entity)
 	store := Store{
-		MemoryDB: db,
+		memoryDB: db,
 		Entity:   web.NewEntityRepo(db),
 	}
+	
 	return &store, nil
 }

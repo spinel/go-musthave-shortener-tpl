@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
+	"strings"
 
 	"github.com/spinel/go-musthave-shortener-tpl/internal/app/model"
 	"github.com/spinel/go-musthave-shortener-tpl/internal/app/pkg"
@@ -14,16 +14,18 @@ import (
 const Host = "http://localhost:8080"
 
 // CreateEntityHandler - save entity in the store.
-func CreateEntityHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
+func NewCreateEntityHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, "wrong body", http.StatusBadRequest)
+
 			return
 		}
 		url := string(body)
 		if url == "" {
 			http.Error(w, "no body", http.StatusBadRequest)
+
 			return
 		}
 
@@ -47,6 +49,7 @@ func CreateEntityHandler(repo *repository.Store) func(w http.ResponseWriter, r *
 		err = repo.Entity.SaveEntity(code, entity)
 		if err != nil {
 			http.Error(w, "entity exists", http.StatusInternalServerError)
+
 			return
 		}
 
@@ -58,16 +61,16 @@ func CreateEntityHandler(repo *repository.Store) func(w http.ResponseWriter, r *
 }
 
 // GetEntityHandler retrive entity from store by id.
-func GetEntityHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
+func NewGetEntityHandler(repo *repository.Store) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		uu, _ := url.Parse(r.URL.Path)
+		pathSplit := strings.Split(r.URL.Path, "/")
 
-		fmt.Println(uu.RawPath)
-		id := r.URL.Path[1:]
-		if id == "" {
+		if len(pathSplit) != 2 {
 			http.Error(w, "no id", http.StatusBadRequest)
+
 			return
 		}
+		id := pathSplit[1]
 
 		entity, err := repo.Entity.GetEntityBy(id)
 		if err != nil {
@@ -77,6 +80,7 @@ func GetEntityHandler(repo *repository.Store) func(w http.ResponseWriter, r *htt
 
 		if entity.URL == "" {
 			http.Error(w, "not found", http.StatusNotFound)
+
 			return
 		}
 

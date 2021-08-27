@@ -13,6 +13,7 @@ type EntityRepo struct {
 func NewEntityRepo(db map[string]model.Entity) *EntityRepo {
 	var repo EntityRepo
 	repo.Memory = db
+
 	return &repo
 }
 
